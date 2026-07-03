@@ -9,6 +9,8 @@ services:
         fromDatabase:
           name: smartpay-db
           property: connectionString
+      - key: PYTHON_VERSION
+        value: 3.12.3
 
 databases:
   - name: smartpay-db
