@@ -13,4 +13,3 @@ services:
 databases:
   - name: smartpay-db
     databaseName: smartbudget
-    user: postgres
