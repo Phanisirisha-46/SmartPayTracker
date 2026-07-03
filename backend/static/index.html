@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartPay Tracker - Budget Assistant</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Style Sheet -->
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- ================= SPLASH SCREEN ================= -->
+        <div id="screen-splash" class="screen active">
+            <div class="splash-content">
+                <div class="logo-glow">
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+                <h1>SmartPay Tracker</h1>
+                <p>Secure Smart Budgeting & UPI Pay</p>
+            </div>
+        </div>
+
+        <!-- ================= LOGIN SCREEN ================= -->
+        <div id="screen-login" class="screen">
+            <div class="form-container">
+                <i class="fa-solid fa-wallet brand-logo"></i>
+                <h2>Welcome Back</h2>
+                <p class="subtitle">Log in to track your budget</p>
+                
+                <div class="input-group">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="email" id="login-email" placeholder="Email Address" required>
+                </div>
+                
+                <div class="input-group">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="login-password" placeholder="Password" required>
+                </div>
+                
+                <div id="login-error" class="error-text hidden">Incorrect email or password.</div>
+                
+                <button id="btn-login" class="btn-primary">
+                    <span class="btn-text">Login</span>
+                    <div class="spinner hidden"></div>
+                </button>
+                
+                <p class="switch-form">Don't have an account? <span id="go-to-signup">Sign Up</span></p>
+            </div>
+        </div>
+
+        <!-- ================= SIGNUP SCREEN ================= -->
+        <div id="screen-signup" class="screen">
+            <div class="form-container">
+                <i class="fa-solid fa-wallet brand-logo"></i>
+                <h2>Create Account</h2>
+                <p class="subtitle">Sign up to start budget tracking</p>
+                
+                <div class="input-group">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" id="signup-name" placeholder="Full Name" required>
+                </div>
+                
+                <div class="input-group">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="email" id="signup-email" placeholder="Email Address" required>
+                </div>
+                
+                <div class="input-group">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="signup-password" placeholder="Password (Min 6 chars)" required>
+                </div>
+                
+                <div id="signup-error" class="error-text hidden">Email already exists or invalid parameters.</div>
+                
+                <button id="btn-signup" class="btn-primary">
+                    <span class="btn-text">Sign Up</span>
+                    <div class="spinner hidden"></div>
+                </button>
+                
+                <p class="switch-form">Already have an account? <span id="go-to-login">Login</span></p>
+            </div>
+        </div>
+
+        <!-- ================= DASHBOARD SCREEN ================= -->
+        <div id="screen-dashboard" class="screen">
+            <header class="app-header">
+                <div>
+                    <h2>SmartPay Tracker</h2>
+                    <p id="user-greeting">Hello, User</p>
+                </div>
+                <button id="btn-logout" class="icon-btn"><i class="fa-solid fa-right-from-bracket"></i></button>
+            </header>
+
+            <main class="scrollable-content">
+                <!-- Warning Alerts -->
+                <div id="budget-alerts" class="alerts-container hidden">
+                    <!-- Dynamic Alerts here -->
+                </div>
+
+                <!-- Set Budget Prompt (If not set) -->
+                <div id="prompt-set-budget" class="card set-budget-card hidden">
+                    <i class="fa-solid fa-building-columns placeholder-icon"></i>
+                    <h3>No Budget Set</h3>
+                    <p>Please enter your monthly income budget to begin tracking.</p>
+                    <div class="input-group inline">
+                        <i class="fa-solid fa-indian-rupee-sign"></i>
+                        <input type="number" id="input-budget-income" placeholder="Monthly Income">
+                    </div>
+                    <button id="btn-create-budget" class="btn-primary">Create Budget</button>
+                </div>
+
+                <!-- Dashboard Content (If budget exists) -->
+                <div id="dashboard-active" class="hidden">
+                    <!-- Balance Card -->
+                    <div class="card balance-card">
+                        <div class="balance-header">
+                            <span>Remaining Balance</span>
+                            <button id="btn-edit-budget" class="edit-btn"><i class="fa-solid fa-pen"></i></button>
+                        </div>
+                        <h1 id="total-remaining">₹0</h1>
+                        <div class="balance-footer">
+                            <div>
+                                <span class="lbl">Total Budget</span>
+                                <span id="total-budget" class="val">₹0</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="lbl">Total Spent</span>
+                                <span id="total-spent" class="val text-danger">₹0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="actions-grid">
+                        <button id="action-pay" class="action-btn pay"><i class="fa-solid fa-paper-plane"></i> Pay (UPI)</button>
+                        <button id="action-reports" class="action-btn reports"><i class="fa-solid fa-chart-pie"></i> Reports</button>
+                    </div>
+
+                    <!-- AI Insights -->
+                    <div id="ai-insights-container" class="card insights-card hidden">
+                        <h4><i class="fa-solid fa-brain"></i> AI Spending Insights</h4>
+                        <ul id="ai-insights-list">
+                            <!-- Dynamic Insights -->
+                        </ul>
+                    </div>
+
+                    <!-- Categories Section -->
+                    <div class="section-header">
+                        <h3>Categories</h3>
+                        <button id="action-add-category" class="text-btn"><i class="fa-solid fa-plus"></i> Add Category</button>
+                    </div>
+
+                    <div id="categories-list" class="categories-list">
+                        <!-- Dynamic Categories -->
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- ================= ADD CATEGORY SCREEN ================= -->
+        <div id="screen-add-category" class="screen">
+            <header class="app-header back">
+                <button id="back-from-add-cat" class="icon-btn"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2>Add Category</h2>
+            </header>
+
+            <main class="scrollable-content form-screen">
+                <div class="input-group">
+                    <i class="fa-solid fa-tag"></i>
+                    <input type="text" id="cat-name" placeholder="Category Name (e.g. Food)">
+                </div>
+
+                <div class="input-group">
+                    <i class="fa-solid fa-indian-rupee-sign"></i>
+                    <input type="number" id="cat-allocated" placeholder="Allocated Amount (₹)">
+                </div>
+
+                <h4>Select Color Theme</h4>
+                <div class="colors-picker">
+                    <span class="color-dot active" data-color="#00B4D8" style="background-color: #00B4D8"></span>
+                    <span class="color-dot" data-color="#FF6B6B" style="background-color: #FF6B6B"></span>
+                    <span class="color-dot" data-color="#4D96FF" style="background-color: #4D96FF"></span>
+                    <span class="color-dot" data-color="#6BCB77" style="background-color: #6BCB77"></span>
+                    <span class="color-dot" data-color="#FFD93D" style="background-color: #FFD93D"></span>
+                    <span class="color-dot" data-color="#FF8E3C" style="background-color: #FF8E3C"></span>
+                </div>
+
+                <h4>Select Icon</h4>
+                <div class="icons-picker">
+                    <span class="icon-dot active" data-icon="food"><i class="fa-solid fa-utensils"></i></span>
+                    <span class="icon-dot" data-icon="home"><i class="fa-solid fa-house"></i></span>
+                    <span class="icon-dot" data-icon="hospital"><i class="fa-solid fa-house-medical"></i></span>
+                    <span class="icon-dot" data-icon="family"><i class="fa-solid fa-users"></i></span>
+                    <span class="icon-dot" data-icon="shopping"><i class="fa-solid fa-bag-shopping"></i></span>
+                    <span class="icon-dot" data-icon="fuel"><i class="fa-solid fa-gas-pump"></i></span>
+                </div>
+
+                <div id="add-cat-error" class="error-text hidden">Budget limit exceeded.</div>
+
+                <button id="btn-save-category" class="btn-primary">Add Category</button>
+            </main>
+        </div>
+
+        <!-- ================= CATEGORY DETAILS SCREEN ================= -->
+        <div id="screen-category-details" class="screen">
+            <header class="app-header back">
+                <button id="back-from-cat-details" class="icon-btn"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2 id="details-cat-title">Category</h2>
+                <button id="btn-delete-category" class="icon-btn danger"><i class="fa-solid fa-trash"></i></button>
+            </header>
+
+            <main class="scrollable-content">
+                <!-- Summary Card -->
+                <div class="card detail-summary-card">
+                    <div class="detail-row">
+                        <div>
+                            <span class="lbl">Allocated</span>
+                            <h3 id="detail-allocated">₹0</h3>
+                        </div>
+                        <div>
+                            <span class="lbl">Spent</span>
+                            <h3 id="detail-spent" class="text-danger">₹0</h3>
+                        </div>
+                        <div>
+                            <span class="lbl">Remaining</span>
+                            <h3 id="detail-remaining" class="text-success">₹0</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Transactions</h3>
+                <div id="transactions-list" class="transactions-list">
+                    <!-- Dynamic Transactions -->
+                </div>
+            </main>
+        </div>
+
+        <!-- ================= PAYMENT SCREEN ================= -->
+        <div id="screen-payment" class="screen">
+            <header class="app-header back">
+                <button id="back-from-payment" class="icon-btn"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2>Payment & Expense</h2>
+            </header>
+
+            <main class="scrollable-content form-screen">
+                <div class="input-group">
+                    <i class="fa-solid fa-indian-rupee-sign"></i>
+                    <input type="number" id="pay-amount" placeholder="Payment Amount (₹)">
+                </div>
+
+                <div class="input-group">
+                    <i class="fa-solid fa-store"></i>
+                    <input type="text" id="pay-merchant" placeholder="Merchant Name (e.g. Swiggy)">
+                </div>
+
+                <div id="ai-suggestion" class="ai-suggestion-badge hidden">
+                    <i class="fa-solid fa-brain"></i> <span id="ai-suggestion-text">AI Suggestion: Food</span>
+                </div>
+
+                <div class="input-group">
+                    <i class="fa-solid fa-list-ul"></i>
+                    <select id="pay-category">
+                        <!-- Dynamic categories select -->
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <i class="fa-solid fa-pen-nib"></i>
+                    <input type="text" id="pay-remarks" placeholder="Remarks (Optional)">
+                </div>
+
+                <div id="payment-error" class="error-card hidden">
+                    <h5><i class="fa-solid fa-triangle-exclamation"></i> Budget Exceeded</h5>
+                    <p id="payment-error-text">You only have ₹0 left. Please reduce the amount.</p>
+                </div>
+
+                <button id="btn-pay" class="btn-primary">Proceed to Pay</button>
+            </main>
+        </div>
+
+        <!-- ================= REPORTS SCREEN ================= -->
+        <div id="screen-reports" class="screen">
+            <header class="app-header back">
+                <button id="back-from-reports" class="icon-btn"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2>Monthly Report</h2>
+            </header>
+
+            <main class="scrollable-content">
+                <!-- Donut Chart Card -->
+                <div class="card chart-card">
+                    <span class="lbl">Spending Distribution</span>
+                    
+                    <div class="chart-container">
+                        <canvas id="donut-chart" width="200" height="200"></canvas>
+                        <div class="chart-center">
+                            <span class="lbl">Spent</span>
+                            <h3 id="chart-total-spent">₹0</h3>
+                            <span id="chart-total-budget" class="lbl">of ₹0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Category Breakdown</h3>
+                <div id="reports-breakdown" class="reports-breakdown">
+                    <!-- Dynamic Breakdown rows -->
+                </div>
+            </main>
+        </div>
+
+    </div>
+
+    <!-- ================= PAYMENT ALLOWED MODAL ================= -->
+    <div id="payment-success-modal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <i class="fa-solid fa-circle-check success-icon"></i>
+            <h3>Payment Allowed</h3>
+            <p id="success-modal-desc">The transaction of ₹5,000 matches your budget.</p>
+            <h4 id="success-modal-remaining" class="text-success">Remaining in category: ₹5,000</h4>
+            <div class="modal-actions">
+                <button id="btn-phonepe" class="btn-primary"><i class="fa-solid fa-mobile-screen-button"></i> Proceed to PhonePe</button>
+                <button id="btn-modal-close" class="text-btn">Skip Payment</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= EDIT BUDGET MODAL ================= -->
+    <div id="edit-budget-modal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <h3>Update Income Budget</h3>
+            <div class="input-group">
+                <i class="fa-solid fa-indian-rupee-sign"></i>
+                <input type="number" id="edit-budget-input" placeholder="Enter new budget amount">
+            </div>
+            <div class="modal-actions">
+                <button id="btn-confirm-edit" class="btn-primary">Update</button>
+                <button id="btn-close-edit" class="text-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Script -->
+    <script src="/static/app.js"></script>
+</body>
+</html>

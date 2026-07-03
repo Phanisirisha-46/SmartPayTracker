@@ -1,0 +1,31 @@
+# Android build and local settings
+.gradle/
+local.properties
+.navigation/
+captures/
+.externalNativeBuild
+.cxx
+/build
+*~
+*.apk
+android/app/build/
+android/.gradle/
+android/local.properties
+
+# Python env and cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+
+# Local DB files and temporary logs
+pgdata/
+pg_server.log
+database_contents.md
+*.png
+.tempmediaStorage/
