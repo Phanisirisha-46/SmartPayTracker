@@ -536,6 +536,7 @@ function setupPaymentScreen() {
     
     document.getElementById("pay-amount").value = "";
     document.getElementById("pay-merchant").value = "";
+    document.getElementById("pay-vpa").value = "";
     document.getElementById("pay-remarks").value = "";
     document.getElementById("ai-suggestion").classList.add("hidden");
     document.getElementById("payment-error").classList.add("hidden");
@@ -665,8 +666,13 @@ document.getElementById("btn-pay").addEventListener("click", async () => {
 // Launch PhonePe / UPI Intent URL
 document.getElementById("btn-phonepe").addEventListener("click", () => {
     successModal.classList.add("hidden");
-    const merchantInput = document.getElementById("pay-merchant").value || "veera";
-    let cleanUpi = merchantInput.trim();
+    const vpaInput = document.getElementById("pay-vpa").value || "";
+    let cleanUpi = vpaInput.trim();
+    if (!cleanUpi) {
+        // Fallback to merchant input name if VPA field is empty
+        const merchantInput = document.getElementById("pay-merchant").value || "veera";
+        cleanUpi = merchantInput.trim();
+    }
     if (!cleanUpi.includes("@")) {
         if (!cleanUpi.includes(" ")) {
             cleanUpi += "@ybl";
