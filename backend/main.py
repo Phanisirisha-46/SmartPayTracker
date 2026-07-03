@@ -18,8 +18,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Initialize Database tables
-models.Base.metadata.create_all(bind=database.engine)
+# Initialize Database tables with a retry loop
+import time
+for i in range(6):
+    try:
+        models.Base.metadata.create_all(bind=database.engine)
+        print("Database tables initialized successfully!")
+        break
+    except Exception as e:
+        if i == 5:
+            raise e
+        print(f"Database connection attempt {i+1} failed: {e}. Retrying in 5 seconds...")
+        time.sleep(5)
 
 # Static file serving & Web Preview
 from fastapi.responses import HTMLResponse
