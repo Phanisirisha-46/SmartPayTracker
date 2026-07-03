@@ -21,8 +21,15 @@ object ApiClient {
     // Preferences operations
     fun getSavedServerIp(context: Context): String {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val ip = prefs.getString(KEY_SERVER_IP, null)
-        if (ip == null || ip.isBlank() || ip == "10.0.2.2" || ip == "https://" || ip == "http://" || !ip.contains(".")) {
+        val rawIp = prefs.getString(KEY_SERVER_IP, null)
+        if (rawIp == null || rawIp.isBlank() || rawIp == "10.0.2.2" || rawIp == "https://" || rawIp == "http://" || !rawIp.contains(".")) {
+            return "smartpaytracker.onrender.com"
+        }
+        val ip = rawIp.replace("https://", "")
+                      .replace("http://", "")
+                      .replace("/", "")
+                      .trim()
+        if (ip.isBlank()) {
             return "smartpaytracker.onrender.com"
         }
         return ip
@@ -30,7 +37,11 @@ object ApiClient {
 
     fun saveServerIp(context: Context, ip: String) {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        prefs.edit().putString(KEY_SERVER_IP, ip.trim()).apply()
+        val cleanIp = ip.replace("https://", "")
+                        .replace("http://", "")
+                        .replace("/", "")
+                        .trim()
+        prefs.edit().putString(KEY_SERVER_IP, cleanIp).apply()
     }
 
     fun getSavedToken(context: Context): String? {
