@@ -11,6 +11,8 @@ services:
           property: connectionString
       - key: PYTHON_VERSION
         value: 3.12.3
+      - key: PYTHONPATH
+        value: backend
 
 databases:
   - name: smartpay-db
