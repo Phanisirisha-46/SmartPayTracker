@@ -21,7 +21,11 @@ object ApiClient {
     // Preferences operations
     fun getSavedServerIp(context: Context): String {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        return prefs.getString(KEY_SERVER_IP, "10.0.2.2") ?: "10.0.2.2"
+        val ip = prefs.getString(KEY_SERVER_IP, null)
+        if (ip == null || ip.isBlank() || ip == "10.0.2.2" || ip == "https://" || ip == "http://" || !ip.contains(".")) {
+            return "smartpaytracker.onrender.com"
+        }
+        return ip
     }
 
     fun saveServerIp(context: Context, ip: String) {
