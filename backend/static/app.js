@@ -665,8 +665,19 @@ document.getElementById("btn-pay").addEventListener("click", async () => {
 // Launch PhonePe / UPI Intent URL
 document.getElementById("btn-phonepe").addEventListener("click", () => {
     successModal.classList.add("hidden");
-    const upiUri = `upi://pay?pa=veera@ybl&pn=SmartPayTracker&am=${paymentToProcess}&cu=INR`;
-    window.open(upiUri, "_blank");
+    const merchantInput = document.getElementById("pay-merchant").value || "veera";
+    let cleanUpi = merchantInput.trim();
+    if (!cleanUpi.includes("@")) {
+        if (!cleanUpi.includes(" ")) {
+            cleanUpi += "@ybl";
+        } else {
+            cleanUpi = "veera@ybl";
+        }
+    }
+    const upiUri = `upi://pay?pa=${encodeURIComponent(cleanUpi)}&pn=SmartPayTracker&am=${paymentToProcess}&cu=INR`;
+    
+    // Use window.location.href to reliably trigger UPI apps on mobile web without popup blocker interference
+    window.location.href = upiUri;
     navigateTo("dashboard");
 });
 
