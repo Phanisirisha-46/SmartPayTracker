@@ -680,7 +680,7 @@ document.getElementById("btn-phonepe").addEventListener("click", () => {
             cleanUpi = "veera@ybl";
         }
     }
-    const upiUri = `upi://pay?pa=${encodeURIComponent(cleanUpi)}&pn=SmartPayTracker&am=${paymentToProcess}&cu=INR`;
+    const upiUri = `upi://pay?pa=${cleanUpi}&pn=SmartPayTracker&am=${paymentToProcess}&cu=INR`;
     
     // Use window.location.href to reliably trigger UPI apps on mobile web without popup blocker interference
     window.location.href = upiUri;
